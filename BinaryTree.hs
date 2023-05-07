@@ -33,7 +33,45 @@ buildAux  arb (x:xs) =  buildAux  (add arb x) xs
 build ::  Ord t => [t] -> BinTree t
 build x = buildAux empty x
 
+mediana :: [t] -> Int
+mediana x =  (div ((length x)) 2) 
 
+mediana2 :: [t] -> t
+mediana2 x = x !! (mediana x) 
+
+ordenar :: Ord t =>  [t] -> [t]
+ordenar x = [mediana2 x] ++ ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x)))
+-- ordenar x = [mediana2 x] ++(delete (mediana2 x) (x))
+
+ordenarAux :: Ord t =>  ([t],[t]) -> [t]
+ordenarAux (x,[]) = x
+ordenarAux ([],y) = y
+ordenarAux ([x],y) = [x]++ordenarAux (splitAt (mediana y) y)
+ordenarAux (x,[y]) =  ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x))) ++ [y]
+ordenarAux (x,y) =  [mediana2 x] ++ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x))) ++  ordenarAux (splitAt (mediana y) y)
+
+buildBalanced ::  Ord t => [t] -> BinTree t
+buildBalanced x =  build (ordenar (sort x))
+
+-- buildBalanced ::  Ord t => [t] -> BinTree t
+-- buildBalanced x =   buildBalancedAux (delete (mediana2 (sort x)) (sort x)) (mediana2 (sort x))
+
+-- buildBalancedAux ::  Ord t => [t] -> t -> BinTree t
+-- buildBalancedAux [] _ = ArbVacio
+-- buildBalancedAux [x] _ = leaf x
+-- -- buildBalancedAux x  y =  Hoja y (lc) (rc)
+-- --                         where 
+-- --                             lc = let (a,b) = splitAt  (mediana x) x
+-- --                                     in buildBalancedAux ( a) (mediana2 a)
+-- --                             rc = let (a,b) = splitAt  (mediana x) x
+-- --                                     in buildBalancedAux (b) (mediana2 b)
+-- buildBalancedAux x  y =  Hoja y (lc) (rc)
+--                         where 
+--                             lc =  buildBalancedAux ( delete (mediana2 a) a) (mediana2 a)
+--                                 where (a,b) = splitAt  (mediana x) x
+--                             rc = buildBalancedAux ( delete (mediana2 b) b) (mediana2 b)
+--                                 where (a,b) = splitAt  (mediana x) x
+                                    
 
 
 mostrarAux :: (Show t) => BinTree t -> String -> String
