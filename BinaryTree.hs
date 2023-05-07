@@ -41,7 +41,7 @@ mediana2 x = x !! (mediana x)
 
 ordenar :: Ord t =>  [t] -> [t]
 ordenar x = [mediana2 x] ++ ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x)))
--- ordenar x = [mediana2 x] ++(delete (mediana2 x) (x))
+
 
 ordenarAux :: Ord t =>  ([t],[t]) -> [t]
 ordenarAux (x,[]) = x
@@ -72,6 +72,41 @@ buildBalanced x =  build (ordenar (sort x))
 --                             rc = buildBalancedAux ( delete (mediana2 b) b) (mediana2 b)
 --                                 where (a,b) = splitAt  (mediana x) x
                                     
+
+
+
+
+preorder :: Ord t => BinTree t -> [t]
+preorder ArbVacio = []
+preorder( Hoja x (lc) (rc) )= [x] ++preorder lc ++preorder rc
+
+postorder :: Ord t => BinTree t -> [t]
+postorder ArbVacio = [] 
+postorder (Hoja x (lc) (rc)) = postorder lc ++postorder rc ++ [x]
+
+inorder :: Ord t => BinTree t -> [t]
+inorder ArbVacio = [] 
+inorder (Hoja x (lc) (rc)) = inorder lc ++ [x] ++ inorder rc
+
+
+balance :: Ord t => BinTree t -> BinTree t
+balance ArbVacio = ArbVacio
+balance x = buildBalanced (inorder x)
+
+
+between ::  Ord t => BinTree t -> t -> t -> [t]
+between ArbVacio _ _ = []
+between (Hoja x (lc) (rc)) a b  | x < a = between rc a b
+                                | x > b = between lc a b
+                                | otherwise = [x] ++ between lc a b ++ between rc a b
+
+
+
+
+
+
+
+
 
 
 mostrarAux :: (Show t) => BinTree t -> String -> String
