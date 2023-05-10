@@ -37,7 +37,10 @@ mediana :: [t] -> Int
 mediana x =  (div ((length x)) 2) 
 
 mediana2 :: [t] -> t
-mediana2 x = x !! (mediana x) 
+-- mediana [] = null
+mediana2 [x] = x 
+mediana2 [x,y] = y
+mediana2 (x:xs) = mediana2 (init xs)
 
 ordenar :: Ord t =>  [t] -> [t]
 ordenar x = [mediana2 x] ++ ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x)))
