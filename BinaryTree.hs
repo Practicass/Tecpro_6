@@ -20,10 +20,9 @@ size (Hoja t (lc) (rc)) = 1 + size lc + size rc
 
 add :: Ord t => BinTree t -> t -> BinTree t
 add ArbVacio  x = leaf x
-add (Hoja t (lc) (rc)) x =  if x <= t   
+add (Hoja t (lc) (rc)) x =  if x < t   
                             then  Hoja t (add lc x) (rc) 
                             else  Hoja t (lc) (add rc x)
-
 
 
 buildAux ::  Ord t => BinTree t -> [t] -> BinTree t
@@ -37,47 +36,24 @@ mediana :: [t] -> Int
 mediana x =  (div ((length x)) 2) 
 
 mediana2 :: [t] -> t
--- mediana [] = null
 mediana2 [x] = x 
 mediana2 [x,y] = y
 mediana2 (x:xs) = mediana2 (init xs)
-
-ordenar :: Ord t =>  [t] -> [t]
-ordenar x = [mediana2 x] ++ ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x)))
 
 
 ordenarAux :: Ord t =>  ([t],[t]) -> [t]
 ordenarAux (x,[]) = x
 ordenarAux ([],y) = y
 ordenarAux ([x],y) = [x]++ordenarAux (splitAt (mediana y) y)
-ordenarAux (x,[y]) =  ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x))) ++ [y]
-ordenarAux (x,y) =  [mediana2 x] ++ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x))) ++  ordenarAux (splitAt (mediana y) y)
+ordenarAux (x,[y]) =  ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x))) ++[y] 
+ordenarAux (x,[y1,y2]) =   [mediana2 x]++ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x))) ++ [y2,y1]
+ordenarAux (x,y) =  [mediana2 x] ++ ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x))) ++  ordenarAux (splitAt (mediana y) y)
+
+ordenar :: Ord t =>  [t] -> [t]
+ordenar x = [mediana2 x] ++ ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x)))
 
 buildBalanced ::  Ord t => [t] -> BinTree t
 buildBalanced x =  build (ordenar (sort x))
-
--- buildBalanced ::  Ord t => [t] -> BinTree t
--- buildBalanced x =   buildBalancedAux (delete (mediana2 (sort x)) (sort x)) (mediana2 (sort x))
-
--- buildBalancedAux ::  Ord t => [t] -> t -> BinTree t
--- buildBalancedAux [] _ = ArbVacio
--- buildBalancedAux [x] _ = leaf x
--- -- buildBalancedAux x  y =  Hoja y (lc) (rc)
--- --                         where 
--- --                             lc = let (a,b) = splitAt  (mediana x) x
--- --                                     in buildBalancedAux ( a) (mediana2 a)
--- --                             rc = let (a,b) = splitAt  (mediana x) x
--- --                                     in buildBalancedAux (b) (mediana2 b)
--- buildBalancedAux x  y =  Hoja y (lc) (rc)
---                         where 
---                             lc =  buildBalancedAux ( delete (mediana2 a) a) (mediana2 a)
---                                 where (a,b) = splitAt  (mediana x) x
---                             rc = buildBalancedAux ( delete (mediana2 b) b) (mediana2 b)
---                                 where (a,b) = splitAt  (mediana x) x
-                                    
-
-
-
 
 preorder :: Ord t => BinTree t -> [t]
 preorder ArbVacio = []
