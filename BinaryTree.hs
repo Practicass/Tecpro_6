@@ -45,8 +45,8 @@ ordenarAux :: Ord t =>  ([t],[t]) -> [t]
 ordenarAux (x,[]) = x
 ordenarAux ([],y) = y
 ordenarAux ([x],y) = [x]++ordenarAux (splitAt (mediana y) y)
-ordenarAux (x,[y]) =  ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x))) ++[y] 
-ordenarAux (x,[y1,y2]) =   [mediana2 x]++ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x))) ++ [y2,y1]
+ordenarAux (x,[y]) =  ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x))) ++ [y] 
+ordenarAux (x,[y1,y2]) =   [mediana2 x] ++ ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x))) ++ [y2,y1]
 ordenarAux (x,y) =  [mediana2 x] ++ ordenarAux (splitAt (mediana x) (delete (mediana2 x) (x))) ++  ordenarAux (splitAt (mediana y) y)
 
 ordenar :: Ord t =>  [t] -> [t]
@@ -57,11 +57,11 @@ buildBalanced x =  build (ordenar (sort x))
 
 preorder :: Ord t => BinTree t -> [t]
 preorder ArbVacio = []
-preorder( Hoja x (lc) (rc) )= [x] ++preorder lc ++preorder rc
+preorder( Hoja x (lc) (rc) )= [x] ++ preorder lc ++ preorder rc
 
 postorder :: Ord t => BinTree t -> [t]
 postorder ArbVacio = [] 
-postorder (Hoja x (lc) (rc)) = postorder lc ++postorder rc ++ [x]
+postorder (Hoja x (lc) (rc)) = postorder lc ++ postorder rc ++ [x]
 
 inorder :: Ord t => BinTree t -> [t]
 inorder ArbVacio = [] 
@@ -91,7 +91,7 @@ between (Hoja x (lc) (rc)) a b  | x < a = between rc a b
 mostrarAux :: (Show t) => BinTree t -> String -> String
 mostrarAux  (ArbVacio)  tab = "<>"
 mostrarAux (Hoja t (ArbVacio) (ArbVacio)) tab = show t 
-mostrarAux (Hoja t (lc) (rc)) tab = show t ++ "\n"++(tab++"  ")++ "|- " ++ mostrarAux lc (tab++"  ") ++  "\n"++(tab++"  ")++ "|- "++ mostrarAux rc (tab++"  ")
+mostrarAux (Hoja t (lc) (rc)) tab = show t ++ "\n" ++ (tab ++ "  ") ++  "|- " ++ mostrarAux lc (tab ++ "  ") ++  "\n" ++ (tab ++ "  ") ++ "|- " ++ mostrarAux rc (tab ++ "  ")
 
 instance (Show t) => Show (BinTree t) where
     show t = mostrarAux t ""
