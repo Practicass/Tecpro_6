@@ -80,14 +80,6 @@ between (Hoja x (lc) (rc)) a b  | x < a = between rc a b
                                 | otherwise = [x] ++ between lc a b ++ between rc a b
 
 
-
-
-
-
-
-
-
-
 mostrarAux :: (Show t) => BinTree t -> String -> String
 mostrarAux  (ArbVacio)  tab = "<>"
 mostrarAux (Hoja t (ArbVacio) (ArbVacio)) tab = show t 
